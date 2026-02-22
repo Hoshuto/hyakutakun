@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8001"   # nginx 経由でのみ公開（candidateの8000とは別ポート）
+    environment:
+      - ALLOWED_ORIGINS=https://hyakutakun.hoshuto.ai
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
