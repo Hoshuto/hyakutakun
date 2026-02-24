@@ -27,24 +27,24 @@ help: ## コマンド一覧を表示
 local: ## フロントエンド + バックエンドを同時起動（Ctrl+C で両方停止）
 	@echo ""
 	@echo "  ローカル開発環境を起動中..."
-	@echo "  フロントエンド → http://localhost:3000"
-	@echo "  バックエンド   → http://localhost:8001"
+	@echo "  フロントエンド → http://localhost:9002"
+	@echo "  バックエンド   → http://localhost:9001"
 	@echo "  停止: Ctrl+C"
 	@echo ""
 	@trap 'kill 0' INT; \
-	(cd backend && .venv/bin/uvicorn main:app --reload --port 8001 2>&1 | sed 's/^/[backend] /') & \
-	(cd frontend && npm run dev 2>&1 | sed 's/^/[frontend] /') & \
+	(cd backend && .venv/bin/uvicorn main:app --reload --port 9001 2>&1 | sed 's/^/[backend] /') & \
+	(cd frontend && npm run dev -- -p 9002 2>&1 | sed 's/^/[frontend] /') & \
 	wait
 
 .PHONY: frontend
-frontend: ## フロントエンド 開発サーバーのみ起動 (port 3000)
-	@echo "フロントエンド起動中... → http://localhost:3000"
-	cd frontend && npm run dev
+frontend: ## フロントエンド 開発サーバーのみ起動 (port 9002)
+	@echo "フロントエンド起動中... → http://localhost:9002"
+	cd frontend && npm run dev -- -p 9002
 
 .PHONY: backend
-backend: ## バックエンド 開発サーバーのみ起動 (port 8001)
-	@echo "バックエンド起動中... → http://localhost:8001"
-	cd backend && .venv/bin/uvicorn main:app --reload --port 8001
+backend: ## バックエンド 開発サーバーのみ起動 (port 9001)
+	@echo "バックエンド起動中... → http://localhost:9001"
+	cd backend && .venv/bin/uvicorn main:app --reload --port 9001
 
 # ==============================================================================
 # ビルド

@@ -15,34 +15,64 @@
 日本保守党代表・百田尚樹のAIチャットボット「AIひゃくた君」。
 テキストチャットで百田尚樹風の応答をリアルタイムストリーミングで返す。
 
+### Tech Stack
+
+- **Frontend**: Next.js (静的エクスポート), TypeScript
+- **Backend**: Python, FastAPI, google-genai SDK
+- **LLM**: Google Gemini (`gemini-2.0-flash`)
+- **Hosting**: Cloudflare Pages (FE) / ConoHa VPS + Docker (BE)
+
+### Architecture
+
 ```
 Cloudflare Pages (Next.js 静的エクスポート)
     ↓ POST /api/chat (SSE)
-ConoHa VPS (FastAPI + anthropic SDK)
-    → Claude API でストリーミング応答
+ConoHa VPS (FastAPI + google-genai SDK)
+    → Gemini API でストリーミング応答
 ```
 
-### 開発環境の起動
+```
+/hyakutakun
+├── frontend/          # Next.js (静的エクスポート)
+├── backend/
+│   ├── main.py        # FastAPI エントリポイント
+│   ├── chat.py        # Gemini API ストリーミング
+│   ├── prompts.py     # システムプロンプト
+│   └── models.py      # Pydantic モデル
+└── CLAUDE.md
+```
+
+### Common Commands
 
 ```bash
-# バックエンド
-cd backend
-source .venv/bin/activate   # または python3 -m venv .venv && pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
-uvicorn main:app --reload --port 8001   # http://localhost:8001
-
-# フロントエンド
-cd frontend
-npm run dev   # http://localhost:3000
-# frontend/.env.local に NEXT_PUBLIC_API_URL=http://localhost:8001 が必要
+make local              # FE + BE 同時起動
+make frontend           # フロントエンドのみ起動 (port 9002)
+make backend            # バックエンドのみ起動 (port 9001)
+make build              # フロントエンドビルド
+make deploy             # FE + BE デプロイ
 ```
+
+### Slash Commands
+
+| コマンド | 説明 |
+|----------|------|
+| `/web起動` | FE (port 9002) + BE (port 9001) を同時起動 |
+
+### Ports
+
+| サービス | ポート |
+|---------|--------|
+| Backend API | 9001 |
+| Frontend | 9002 |
+
+> `frontend/.env.local` に `NEXT_PUBLIC_API_URL=http://localhost:9001` を設定
 
 ### 本番デプロイ
 
 | レイヤー | 環境 | 方法 |
 |---|---|---|
 | フロントエンド | Cloudflare Pages | Git push で自動ビルド・デプロイ |
-| バックエンド | ConoHa VPS | `docker compose up --build -d`（nginx が `127.0.0.1:8001` にリバースプロキシ） |
+| バックエンド | ConoHa VPS | `docker compose up --build -d`（nginx がリバースプロキシ） |
 
 ---
 
@@ -82,11 +112,6 @@ cd backend && source .venv/bin/activate && python -c "from main import app"   # 
 - バックエンド: FastAPI の `StreamingResponse` で SSE 形式のイベントを送信
 - フロントエンド: `fetch` + `ReadableStream` で SSE を受信・逐次表示
 - nginx: `proxy_buffering off` で SSE のバッファリングを無効化
-
-### ポート
-
-- candidateプロジェクト: 8000
-- hyakutakun（本プロジェクト）: 8001
 
 ---
 

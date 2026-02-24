@@ -2,6 +2,10 @@ import json
 import os
 import traceback
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -13,7 +17,7 @@ app = FastAPI(title="AIひゃくた君 API")
 
 # CORS 設定
 allowed_origins = os.environ.get(
-    "ALLOWED_ORIGINS", "http://localhost:3000"
+    "ALLOWED_ORIGINS", "http://localhost:9002"
 ).split(",")
 
 app.add_middleware(
@@ -34,8 +38,11 @@ async def health():
 async def chat(request: ChatRequest):
     """チャットエンドポイント（SSE ストリーミング）"""
 
-    # メッセージを Claude API 形式に変換
-    messages = [{"role": m.role, "content": m.content} for m in request.messages]
+    # メッセージを Gemini API 形式に変換（assistant → model）
+    messages = [
+        {"role": "model" if m.role == "assistant" else m.role, "parts": [{"text": m.content}]}
+        for m in request.messages
+    ]
 
     async def event_stream():
         try:
