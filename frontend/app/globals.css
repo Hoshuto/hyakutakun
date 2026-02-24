@@ -3,10 +3,10 @@
 :root {
   --background: #f5f5f0;
   --foreground: #1a1a1a;
-  --primary: #c41e3a;
-  --primary-dark: #9e1830;
+  --primary: #0a82dc;
+  --primary-dark: #0768b0;
   --chat-bg: #ffffff;
-  --user-bubble: #c41e3a;
+  --user-bubble: #0a82dc;
   --user-text: #ffffff;
   --assistant-bubble: #ffffff;
   --assistant-text: #1a1a1a;
@@ -52,4 +52,15 @@ body {
   content: "▌";
   animation: blink 1s infinite;
   color: var(--primary);
+}
+
+/* マイク録音中のパルスアニメーション */
+@keyframes recording-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.recording-pulse {
+  animation: recording-pulse 1.5s infinite;
 }

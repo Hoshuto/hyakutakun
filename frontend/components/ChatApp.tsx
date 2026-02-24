@@ -73,9 +73,7 @@ export default function ChatApp() {
       {/* ヘッダー */}
       <header className="flex-shrink-0 border-b border-[var(--border)] bg-white">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--primary)] text-white font-bold">
-            百
-          </div>
+          <img src="/hyakutakun3.jpeg" alt="AIひゃくた君" className="h-10 w-10 rounded-full object-cover" />
           <div>
             <h1 className="text-lg font-bold text-[var(--foreground)]">
               AIひゃくた君
@@ -92,9 +90,7 @@ export default function ChatApp() {
         <div className="mx-auto max-w-3xl px-4 py-6">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary)] text-white text-2xl font-bold">
-                百
-              </div>
+              <img src="/hyakutakun3.jpeg" alt="AIひゃくた君" className="mb-4 h-20 w-20 rounded-full object-cover" />
               <h2 className="mb-2 text-xl font-bold">AIひゃくた君</h2>
               <p className="text-sm text-gray-500 max-w-sm">
                 おう、AIひゃくた君やで！なんでも聞いてや。
