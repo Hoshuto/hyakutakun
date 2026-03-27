@@ -8,3 +8,4 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[Message]
+    character: str = "hyakutakun"

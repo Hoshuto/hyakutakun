@@ -16,6 +16,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
  */
 export async function streamChat(
   messages: Message[],
+  character: string,
   onChunk: (text: string) => void,
   onDone: () => void,
   onError: (error: string) => void,
@@ -24,7 +25,7 @@ export async function streamChat(
   const response = await fetch(`${API_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, character }),
     signal,
   });
 

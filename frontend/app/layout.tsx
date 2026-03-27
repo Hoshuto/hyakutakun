@@ -9,9 +9,9 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "AIひゃくた君 - 日本保守党AIチャットボット",
+  title: "日本保守党 AIチャット",
   description:
-    "日本保守党代表・百田尚樹のAIチャットボット。なんでも気軽に聞いてや！",
+    "日本保守党のAIチャットボット。百田尚樹、北村晴男、有本香と気軽に話そう！",
 };
 
 export default function RootLayout({

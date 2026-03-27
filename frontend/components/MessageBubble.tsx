@@ -5,11 +5,15 @@ import type { Message } from "@/lib/api";
 
 interface MessageBubbleProps {
   message: Message;
+  avatar: string;
+  characterName: string;
   isStreaming?: boolean;
 }
 
 export default function MessageBubble({
   message,
+  avatar,
+  characterName,
   isStreaming,
 }: MessageBubbleProps) {
   const isUser = message.role === "user";
@@ -64,7 +68,7 @@ export default function MessageBubble({
       {/* アシスタントのアイコン */}
       {!isUser && (
         <div className="mr-2 flex-shrink-0">
-          <img src="/hyakutakun3.jpeg" alt="AIひゃくた君" className="h-8 w-8 rounded-full object-cover" />
+          <img src={avatar} alt={characterName} className="h-8 w-8 rounded-full object-cover" />
         </div>
       )}
 

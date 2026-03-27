@@ -3,7 +3,7 @@ from collections.abc import AsyncGenerator
 
 from google import genai
 
-from prompts import SYSTEM_PROMPT
+from prompts import CHARACTERS
 
 MODEL = "gemini-2.5-flash"
 
@@ -18,14 +18,18 @@ def _get_client() -> genai.Client:
     return _client
 
 
-async def stream_chat(messages: list[dict]) -> AsyncGenerator[str, None]:
+async def stream_chat(messages: list[dict], character: str = "hyakutakun") -> AsyncGenerator[str, None]:
     """Gemini API にストリーミングリクエストを送信し、テキストチャンクを逐次返す"""
+    # キャラクターのプロンプトを取得（不明なキャラはデフォルト）
+    char_data = CHARACTERS.get(character, CHARACTERS["hyakutakun"])
+    system_prompt = char_data["prompt"]
+
     client = _get_client()
     stream = await client.aio.models.generate_content_stream(
         model=MODEL,
         contents=messages,
         config=genai.types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
+            system_instruction=system_prompt,
         ),
     )
     async for response in stream:
