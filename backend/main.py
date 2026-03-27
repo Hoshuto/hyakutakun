@@ -12,8 +12,9 @@ from fastapi.responses import StreamingResponse
 
 from chat import stream_chat
 from models import ChatRequest
+from prompts import CHARACTERS
 
-app = FastAPI(title="AIひゃくた君 API")
+app = FastAPI(title="日本保守党 AIチャット API")
 
 # CORS 設定
 allowed_origins = os.environ.get(
@@ -34,6 +35,15 @@ async def health():
     return {"status": "ok"}
 
 
+@app.get("/api/characters")
+async def get_characters():
+    """キャラクター一覧を返す"""
+    return [
+        {"id": char_id, "name": char["name"], "person": char["person"]}
+        for char_id, char in CHARACTERS.items()
+    ]
+
+
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     """チャットエンドポイント（SSE ストリーミング）"""
@@ -46,7 +56,7 @@ async def chat(request: ChatRequest):
 
     async def event_stream():
         try:
-            async for chunk in stream_chat(messages):
+            async for chunk in stream_chat(messages, request.character):
                 # SSE 形式でテキストチャンクを送信
                 data = json.dumps({"type": "text", "content": chunk}, ensure_ascii=False)
                 yield f"data: {data}\n\n"

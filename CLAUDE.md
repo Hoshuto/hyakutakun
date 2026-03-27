@@ -19,7 +19,7 @@
 
 - **Frontend**: Next.js (静的エクスポート), TypeScript
 - **Backend**: Python, FastAPI, google-genai SDK
-- **LLM**: Google Gemini (`gemini-2.0-flash`)
+- **LLM**: Google Gemini (`gemini-2.5-flash`)
 - **Hosting**: Cloudflare Pages (FE) / ConoHa VPS + Docker (BE)
 
 ### Architecture
@@ -112,6 +112,16 @@ cd backend && source .venv/bin/activate && python -c "from main import app"   # 
 - バックエンド: FastAPI の `StreamingResponse` で SSE 形式のイベントを送信
 - フロントエンド: `fetch` + `ReadableStream` で SSE を受信・逐次表示
 - nginx: `proxy_buffering off` で SSE のバッファリングを無効化
+
+---
+
+## 🔑 APIキー管理
+
+- Gemini APIキーは `backend/.env` の `GOOGLE_API_KEY` で管理
+- 無料枠のクォータは**アカウント単位**で制限される（プロジェクト単位ではない）
+- クォータ超過時は同一アカウントで新キーを発行しても解決しない → 課金有効化 or 別アカウントが必要
+- `gemini-2.0-flash` は新規ユーザーに非対応。`gemini-2.5-flash` 以降を使用すること
+- `.env` の変更後はバックエンドの再起動が必要（`--reload` では `.env` は自動反映されない）
 
 ---
 
